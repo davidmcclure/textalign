@@ -16,7 +16,6 @@ class SmithWaterman:
             s2 (iter)
         """
 
-        # Initialize matrix, with top / left 0 rows.
         self.matrix = np.zeros([len(s1)+1, len(s2)+1])
 
         for r in range(1, len(s1)+1):
@@ -48,7 +47,7 @@ class SmithWaterman:
 
                 col_score = (
                     col_max_score -
-                    (gap_penalty + (gap_extension_penalty + col_max_distance))
+                    (gap_penalty + (gap_extension_penalty * col_max_distance))
                 )
 
                 # 3 - greatest row gap score - same for row
@@ -63,7 +62,7 @@ class SmithWaterman:
 
                 row_score = (
                     row_max_score -
-                    (gap_penalty + (gap_extension_penalty + row_max_distance))
+                    (gap_penalty + (gap_extension_penalty * row_max_distance))
                 )
 
                 # Fill the current cell.
