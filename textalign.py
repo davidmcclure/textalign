@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from numpy import unravel_index
+
 
 class SmithWaterman:
 
@@ -17,6 +19,8 @@ class SmithWaterman:
         """
 
         self.matrix = np.zeros([len(s1)+1, len(s2)+1])
+
+        self.pointers = {}
 
         for r in range(1, len(s1)+1):
             for c in range(1, len(s2)+1):
@@ -65,11 +69,36 @@ class SmithWaterman:
                     (gap_penalty + (gap_extension_penalty * row_max_distance))
                 )
 
-                # Fill the current cell.
-
-                self.matrix[r][c] = max(
+                # Compute the new score.
+                score = max(
                     diagonal_score,
                     col_score,
                     row_score,
                     0,
                 )
+
+                # Update the backpointers.
+
+                if score == diagonal_score:
+                    self.pointers[r,c] = (r-1, c-1, True)
+
+                elif score == col_score:
+                    self.pointers[r,c] = (r-1, c, False)
+
+                elif score == row_score:
+                    self.pointers[r,c] = (r, c-1, False)
+
+                else:
+                    self.pointers[r,c] = False
+
+                # Fill the cell.
+                self.matrix[r,c] = score
+
+
+    def extract(self):
+
+        """
+        Extract the optimum alignment.
+        """
+
+        pass
